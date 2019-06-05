@@ -1,7 +1,12 @@
 @echo off
+chcp 65001
+cls
 
 if not exist "%~dp0aria2c.exe" (
+  call :printbanner
+  call :printline
   echo Downloading aria2c.exe...
+  call :printline
   powershell -Command "(New-Object Net.WebClient).DownloadFile('https://uupdump.ml/autodl_files/aria2c.exe', '%~dp0aria2c.exe')"
 )
 call :checkhash "3eb8712b0db6ba466f8afe1bf606983fe8341c941bdfcadc07068288c7ca5a9c" "aria2c.exe"
@@ -13,7 +18,11 @@ goto start
 
   if not "%~1" == "%CURRHASH%" (
     del %~2
-    echo "%~2 hash does not match"
+    cls
+    call :printbanner
+    call :printline
+    echo %~2 hash does not match
+    call :printline
     goto halt
   )
 goto :EOF
@@ -23,13 +32,7 @@ call :haltHelper 2> nul
 () 
 exit /b
 
-
-
-
-:start
-
-chcp 65001
-cls
+:printbanner
 echo █████▙▄ ▜██▌███▙███ ██ ██████▙▐██ ███ ▗▟███▄ 
 echo ███████▖███▌███▖███▝██▌███▝██▛▐██▗███ ██████▙
 echo ██▛▌▟██▌▟██▖██▜▖▜██▐██▌█▛▙ ███▐█▜▙██▌▝███▖▀▀▀
@@ -40,10 +43,21 @@ echo ███▌    ▜█▙██▛█  ███▛▐███   ██▜
 echo ██▟▌     ▀███▛▘  ▜██▌ ██▙   ███ ▐██▌  ▝▜███▀ 
 echo.
 echo     Portable Universal Wundows Web Server
+goto :EOF
+
+:printline
+echo ...............................................
+goto :EOF
+
+
+
+:start
+cls
+call :printbanner
 echo.
-echo ...............................................
+call :printline
 echo PRESS 1-9 to select your installation, 0 to exit
-echo ...............................................
+call :printline
 echo.
 echo 1 - PHP-7.3.6, Composer, SQLite
 echo 2 - PHP-7.3.6, Composer, MariaDB-5.5.29, HeidiSQL_10.1
