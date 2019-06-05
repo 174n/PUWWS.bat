@@ -39,7 +39,7 @@ echo ███▌    ▜██▌███▖ ██▟▛▜██▟▌ ▐█
 echo ███▌    ▜█▙██▛█  ███▛▐███   ██▜▌▐██▛ ▝█████▙▛
 echo ██▟▌     ▀███▛▘  ▜██▌ ██▙   ███ ▐██▌  ▝▜███▀ 
 echo.
-echo     Portable Universal Windows Web Server
+echo     Portable Universal Wundows Web Server
 echo.
 echo ...............................................
 echo PRESS 1-9 to select your installation, 0 to exit
