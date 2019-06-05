@@ -1,2 +1,2 @@
 # PUWWS.bat
-Portable Universal Windows Web Server (work in progress)
+Portable Universal Wundows Web Server (work in progress)
