@@ -84,6 +84,7 @@ EXIT /B
   call :unpack mariadb 7z
   call :unpack HeidiSQL zip
   call :unpack wordpress zip
+  7za x postinstall.zip
   call :printline
   call :installComposer
   call :cleanup
