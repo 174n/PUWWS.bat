@@ -1,36 +1,15 @@
 @echo off
 chcp 65001
 cls
-
-if not exist "%~dp0aria2c.exe" (
+if not exist "%cd%\aria2c.exe" (
   call :printbanner
   call :printline
   echo Downloading aria2c.exe...
   call :printline
-  powershell -Command "(New-Object Net.WebClient).DownloadFile('https://uupdump.ml/autodl_files/aria2c.exe', '%~dp0aria2c.exe')"
+  powershell -Command "(New-Object Net.WebClient).DownloadFile('https://uupdump.ml/autodl_files/aria2c.exe', '%cd%\aria2c.exe')"
 )
-call :checkhash "3eb8712b0db6ba466f8afe1bf606983fe8341c941bdfcadc07068288c7ca5a9c" "aria2c.exe"
+call :checkhash "SHA256" "3eb8712b0db6ba466f8afe1bf606983fe8341c941bdfcadc07068288c7ca5a9c" "aria2c.exe"
 goto start
-:checkhash
-  for /F "skip=1" %%i in ('certutil -hashfile %~2 SHA256') do set CURRHASH=%%i & goto HaveValue
-  :HaveValue
-  set CURRHASH=%CURRHASH: =%
-
-  if not "%~1" == "%CURRHASH%" (
-    del %~2
-    cls
-    call :printbanner
-    call :printline
-    echo %~2 hash does not match
-    call :printline
-    goto halt
-  )
-goto :EOF
-:halt
-call :haltHelper 2> nul
-:haltHelper
-() 
-exit /b
 
 :printbanner
 echo █████▙▄ ▜██▌███▙███ ██ ██████▙▐██ ███ ▗▟███▄ 
@@ -79,15 +58,35 @@ IF ERRORLEVEL 1 CALL :DEFAULT_CASE
 EXIT /B
 
 :CASE_1
-  echo PHP-7.3.6, Composer, SQLite  
+  call :showDownloadingBanner "PHP, Composer"
+  call :downloadAria2 https://raw.githubusercontent.com/Rundik/PUWWS.bat/master/metalinks/PHP_SQLite_7za.meta4
+  call :unpack php 7z
+  call :printline
+  call :installComposer
+  call :cleanup
   goto END_CASE
 
 :CASE_2
-  echo PHP-7.3.6, Composer, MariaDB-5.5.29, HeidiSQL_10.1  
+  call :showDownloadingBanner "PHP, Composer, MariaDB, HeidiSQL"
+  call :downloadAria2 https://raw.githubusercontent.com/Rundik/PUWWS.bat/master/metalinks/PHP_MariaDB_HeidiSQL_7za.meta4
+  call :unpack php 7z
+  call :unpack mariadb 7z
+  call :unpack HeidiSQL zip
+  call :printline
+  call :installComposer
+  call :cleanup
   goto END_CASE
 
 :CASE_3
-  echo WordPress-5.2.1, HeidiSQL_10.1  
+  call :showDownloadingBanner "PHP, Composer, MariaDB, HeidiSQL"
+  call :downloadAria2 https://raw.githubusercontent.com/Rundik/PUWWS.bat/master/metalinks/PHP_MariaDB_HeidiSQL_WordPress_7za.meta4
+  call :unpack php 7z
+  call :unpack mariadb 7z
+  call :unpack HeidiSQL zip
+  call :unpack wordpress zip
+  call :printline
+  call :installComposer
+  call :cleanup
   goto END_CASE
 
 :CASE_4
@@ -122,3 +121,57 @@ EXIT /B
 :END_CASE
   VER > NUL
   goto :EOF
+
+:showDownloadingBanner
+  cls
+  call :printbanner
+  echo.
+  call :printline
+  echo Downloading and unpacking %~1...
+  call :printline
+  echo.
+  goto :EOF
+
+:downloadAria2
+  aria2c -c -x2 -Z --follow-metalink=mem --console-log-level=error %~1
+  goto :EOF
+
+:unpack
+  7za x %~1.%~2 -o%~1 -y
+
+:installComposer
+  if not exist "%cd%\composer.phar" (
+    php\php -r "copy('https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer', 'composer-setup.php');"
+    php\php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+    php\php composer-setup.php
+    php\php -r "unlink('composer-setup.php');"
+  )
+  goto :EOF
+
+:cleanup
+  del 7za.exe
+  rem del aria2c.exe
+  del *.7z
+  del *.zip
+  goto :EOF
+
+:checkhash
+  for /F "skip=1" %%i in ('certutil -hashfile %~3 %~1') do set CURRHASH=%%i & goto HaveValue
+  :HaveValue
+  set CURRHASH=%CURRHASH: =%
+
+  if not "%~2" == "%CURRHASH%" (
+    del %~3
+    cls
+    call :printbanner
+    call :printline
+    echo %~3 hash does not match
+    call :printline
+    goto halt
+  )
+  goto :EOF
+:halt
+call :haltHelper 2> nul
+:haltHelper
+() 
+exit /b
