@@ -1,6 +1,7 @@
 *
 **/*.*
-**
 !PUWWS.bat
 !README.md
 !.gitignore
+!metalinks/
+!metalinks/*

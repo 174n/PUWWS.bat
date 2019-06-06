@@ -60,7 +60,7 @@ echo PRESS 1-9 to select your installation, 0 to exit
 call :printline
 echo.
 echo 1 - PHP-7.3.6, Composer, SQLite
-echo 2 - PHP-7.3.6, Composer, MariaDB-5.5.29, HeidiSQL_10.1
+echo 2 - PHP-7.3.6, Composer, MariaDB-5.5.29, HeidiSQL-10.1
 echo 3 - WordPress-5.2.1, HeidiSQL_10.1
 echo 4 - Cockpit CMS
 echo 5 - Cockpit CMS, Vue.js frontend (with cli)
