@@ -1,6 +1,9 @@
 @echo off
 chcp 65001
 cls
+if exist "%cd%\.installed" (
+  goto installed
+)
 if not exist "%cd%\aria2c.exe" (
   call :printbanner
   call :printline
@@ -58,36 +61,43 @@ IF ERRORLEVEL 1 CALL :DEFAULT_CASE
 EXIT /B
 
 :CASE_1
+  call :writeInstallMark 1
   call :showDownloadingBanner "PHP, Composer"
   call :downloadAria2 https://raw.githubusercontent.com/Rundik/PUWWS.bat/master/metalinks/PHP_SQLite_7za.meta4
   call :unpack php 7z
-  call :printline
   call :installComposer
   call :cleanup
+  mkdir www
+  echo ^<?php phpinfo(); > www\index.php
+  goto installed
   goto END_CASE
 
 :CASE_2
+  call :writeInstallMark 2
   call :showDownloadingBanner "PHP, Composer, MariaDB, HeidiSQL"
   call :downloadAria2 https://raw.githubusercontent.com/Rundik/PUWWS.bat/master/metalinks/PHP_MariaDB_HeidiSQL_7za.meta4
   call :unpack php 7z
   call :unpack mariadb 7z
   call :unpack HeidiSQL zip
-  call :printline
   call :installComposer
   call :cleanup
+  mkdir www
+  echo ^<?php phpinfo(); > www\index.php
+  goto installed
   goto END_CASE
 
 :CASE_3
-  call :showDownloadingBanner "PHP, Composer, MariaDB, HeidiSQL"
+  call :writeInstallMark 3
+  call :showDownloadingBanner "WordPress, HeidiSQL"
   call :downloadAria2 https://raw.githubusercontent.com/Rundik/PUWWS.bat/master/metalinks/PHP_MariaDB_HeidiSQL_WordPress_7za.meta4
   call :unpack php 7z
   call :unpack mariadb 7z
   call :unpack HeidiSQL zip
-  call :unpack wordpress zip
+  7za x wordpress.zip -y
+  ren wordpress www
   7za x postinstall.zip
-  call :printline
-  call :installComposer
   call :cleanup
+  goto installed
   goto END_CASE
 
 :CASE_4
@@ -123,6 +133,9 @@ EXIT /B
   VER > NUL
   goto :EOF
 
+:writeInstallMark
+  echo %~1 > .installed
+
 :showDownloadingBanner
   cls
   call :printbanner
@@ -139,14 +152,14 @@ EXIT /B
 
 :unpack
   7za x %~1.%~2 -o%~1 -y
+  goto :EOF
 
 :installComposer
-  if not exist "%cd%\composer.phar" (
-    php\php -r "copy('https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer', 'composer-setup.php');"
-    php\php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-    php\php composer-setup.php
-    php\php -r "unlink('composer-setup.php');"
-  )
+  %cd%\php\php -r "copy('https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer', 'composer-setup.php');"
+  %cd%\php\php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+  %cd%\php\php composer-setup.php
+  %cd%\php\php -r "unlink('composer-setup.php');"
+  move composer.phar php
   goto :EOF
 
 :cleanup
@@ -176,3 +189,42 @@ call :haltHelper 2> nul
 :haltHelper
 () 
 exit /b
+
+:installed
+  cls
+  set /p build=< .installed
+  call :printbanner
+  echo.
+  call :printline
+
+  2>NUL CALL :CASE2_%build%
+  IF ERRORLEVEL 1 CALL :DEFAULT_CASE2
+
+  EXIT /B
+
+  :CASE2_1
+    echo PHP server started. Close the window to stop
+    call :printline
+    start "php" /B %cd%\php\php.exe -S localhost:8000 -t www\
+    start "browser" http://localhost:8000
+    goto END_CASE
+  :CASE2_2
+    echo PHP, MariaDB server started. Close the window to stop
+    call :printline
+    start "php" /B %cd%\php\php.exe -S localhost:8000 -t www\
+    start "mariadb" /B %cd%\mariadb\bin\mysqld.exe --console
+    start "browser" http://localhost:8000
+    goto END_CASE
+  :CASE2_3
+    echo Wordpress server started. Close the window to stop
+    call :printline
+    start "php" /B %cd%\php\php.exe -S localhost:8000 -t www\
+    start "mariadb" /B %cd%\mariadb\bin\mysqld.exe --console
+    start "browser" http://localhost:8000
+    goto END_CASE
+
+  :DEFAULT_CASE2
+    goto END_CASE2
+  :END_CASE2
+    VER > NUL
+    goto :EOF
