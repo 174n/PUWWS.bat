@@ -1,4 +1,5 @@
 @echo off
+setlocal enabledelayedexpansion
 chcp 65001
 cls
 if exist "%cd%\.installed" (
@@ -170,9 +171,12 @@ EXIT /B
   goto :EOF
 
 :checkhash
-  for /F "skip=1" %%i in ('certutil -hashfile %~3 %~1') do set CURRHASH=%%i & goto HaveValue
-  :HaveValue
-  set CURRHASH=%CURRHASH: =%
+  set /a count=1 
+  for /f "skip=1 delims=:" %%a in ('CertUtil -hashfile %~3 %~1') do (
+    if !count! equ 1 set "CURRHASH=%%a"
+    set/a count+=1
+  )
+  set "CURRHASH=%CURRHASH: =%"
 
   if not "%~2" == "%CURRHASH%" (
     del %~3
@@ -180,6 +184,7 @@ EXIT /B
     call :printbanner
     call :printline
     echo %~3 hash does not match
+    echo %CURRHASH%
     call :printline
     goto halt
   )
