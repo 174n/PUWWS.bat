@@ -7,10 +7,10 @@
    <hash type="sha-256">b0482d5787d01d2cd3c40c9c9dbed0e51321545abcdd728f01750ddf66b99652</hash>
  </file>
  <file name="mariadb.7z">
-   <size>2996979</size>
-   <version>5.5.29</version>
-   <url>https://github.com/SlimOpenSourceApps/Slim-version-for-mariadb-winx64/releases/download/5.5.29/mariadb-5.5.29-winx64.7z</url>
-   <hash type="sha-256">e423a39347c341e69db12b8a53d6fd4c61ae90d9f4f21be668fce48a30e0a86a</hash>
+   <size>4252516</size>
+   <version>10.3.13</version>
+   <url>https://github.com/SlimOpenSourceApps/Slim-version-for-mariadb-winx64/releases/download/10.3.13/mariadb-10.3.13-winx64.7z</url>
+   <hash type="sha-256">534639af88d530af86aade241a76a27c0dff1e550609b785c6f9ecd85bf01ece</hash>
  </file>
  <file name="HeidiSQL.zip">
    <size>11788236</size>
