@@ -24,7 +24,7 @@
    <url>https://wordpress.org/wordpress-5.2.1.zip</url>
    <hash type="sha-256">049005a9f08b11fb74faf98985ac6844cf4e0b9c47f48e3059c41db78b4f9d8c</hash>
  </file>
- <file name="postinstall.zip">
+ <file name="postinstall.7z">
    <size>2260</size>
    <version>latest</version>
    <url>https://github.com/Rundik/PUWWS.bat/raw/master/postinstalls/wordpress.7z</url>

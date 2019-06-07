@@ -90,7 +90,7 @@ EXIT /B
   call :unpack php 7z
   call :unpack mariadb 7z
   call :unpack HeidiSQL zip
-  7za x wordpress.zip -y
+  7za x wordpress.7z -y
   ren wordpress www
   7za x postinstall.zip
   call :cleanup
@@ -108,12 +108,11 @@ EXIT /B
   call :unpack php 7z
   call :unpack mariadb 7z
   call :unpack HeidiSQL zip
-  call :unpack postinstall 7z
+  7za x postinstall.7z
   call :installComposer
   call :cleanup
   echo Installing laravel...
   php\php php\composer.phar create-project --prefer-dist laravel/laravel www
-  move /Y postinstall/* www/
   goto installed
   goto END_CASE
 

@@ -18,7 +18,7 @@
    <url>https://www.heidisql.com/downloads/releases/HeidiSQL_10.1_64_Portable.zip</url>
    <hash type="sha-256">dc627bb94ff832ac42a9b7588af47edc6f31e20e1c98ce7df353b6cc6fb921a7</hash>
  </file>
- <file name="postinstall.zip">
+ <file name="postinstall.7z">
    <size>1504</size>
    <version>latest</version>
    <url>https://github.com/Rundik/PUWWS.bat/raw/master/postinstalls/laravel.7z</url>
