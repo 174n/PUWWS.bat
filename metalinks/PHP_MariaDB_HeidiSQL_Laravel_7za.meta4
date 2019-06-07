@@ -19,10 +19,10 @@
    <hash type="sha-256">dc627bb94ff832ac42a9b7588af47edc6f31e20e1c98ce7df353b6cc6fb921a7</hash>
  </file>
  <file name="postinstall.7z">
-   <size>1504</size>
+   <size>1517</size>
    <version>latest</version>
    <url>https://github.com/Rundik/PUWWS.bat/raw/master/postinstalls/laravel.7z</url>
-   <hash type="sha-256">49ee674073702439438c1701933a0b79042cf3cf79e8031d92c6de569e24f42a</hash>
+   <hash type="sha-256">42249d8e19217b5f62015f2f87524070b2e271e35958b50df8a73bc7bff9b2b3</hash>
  </file>
  <file name="7za.exe">
    <size>587776</size>
