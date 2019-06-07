@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 chcp 65001
 cls
-if exist "%cd%\.installed" (
+if exist "%cd%\.puwws" (
   goto installed
 )
 if not exist "%cd%\aria2c.exe" (
@@ -45,12 +45,8 @@ echo.
 echo 1 - PHP-7.3.6, Composer, SQLite
 echo 2 - PHP-7.3.6, Composer, MariaDB-5.5.29, HeidiSQL-10.1
 echo 3 - WordPress-5.2.1, HeidiSQL_10.1
-echo 4 - Cockpit CMS
-echo 5 - Cockpit CMS, Vue.js frontend (with cli)
-echo 6 - Cockpit CMS, Vue.js frontend (without cli)
-echo 7 - Composer, Laravel
-echo 8 - Composer, Laravel, Vue.js frontend (with cli)
-echo 9 - Composer, Laravel, Vue.js frontend (without cli)
+echo 4 - Cockpit CMS, Composer
+echo 5 - Laravel, MariaDB-5.5.29, HeidiSQL-10.1
 echo 0 - Exit
 echo.
 :dialog
@@ -62,7 +58,7 @@ IF ERRORLEVEL 1 CALL :DEFAULT_CASE
 EXIT /B
 
 :CASE_1
-  call :writeInstallMark 1
+  call :writeInstallMark php
   call :showDownloadingBanner "PHP, Composer"
   call :downloadAria2 https://raw.githubusercontent.com/Rundik/PUWWS.bat/master/metalinks/PHP_SQLite_7za.meta4
   call :unpack php 7z
@@ -74,7 +70,7 @@ EXIT /B
   goto END_CASE
 
 :CASE_2
-  call :writeInstallMark 2
+  call :writeInstallMark mariadb
   call :showDownloadingBanner "PHP, Composer, MariaDB, HeidiSQL"
   call :downloadAria2 https://raw.githubusercontent.com/Rundik/PUWWS.bat/master/metalinks/PHP_MariaDB_HeidiSQL_7za.meta4
   call :unpack php 7z
@@ -88,7 +84,7 @@ EXIT /B
   goto END_CASE
 
 :CASE_3
-  call :writeInstallMark 3
+  call :writeInstallMark wordpress
   call :showDownloadingBanner "WordPress, HeidiSQL"
   call :downloadAria2 https://raw.githubusercontent.com/Rundik/PUWWS.bat/master/metalinks/PHP_MariaDB_HeidiSQL_WordPress_7za.meta4
   call :unpack php 7z
@@ -106,7 +102,19 @@ EXIT /B
   goto END_CASE
 
 :CASE_5
-  echo Not done yet
+  call :writeInstallMark laravel
+  call :showDownloadingBanner "Laravel, MariaDB, HeidiSQL"
+  call :downloadAria2 https://raw.githubusercontent.com/Rundik/PUWWS.bat/master/metalinks/PHP_MariaDB_HeidiSQL_Laravel_7za.meta4
+  call :unpack php 7z
+  call :unpack mariadb 7z
+  call :unpack HeidiSQL zip
+  call :unpack postinstall 7z
+  call :installComposer
+  call :cleanup
+  echo Installing laravel...
+  php\php php\composer.phar create-project --prefer-dist laravel/laravel www
+  move /Y postinstall/* www/
+  goto installed
   goto END_CASE
 
 :CASE_6
@@ -135,7 +143,7 @@ EXIT /B
   goto :EOF
 
 :writeInstallMark
-  echo %~1 > .installed
+  echo %~1 > .puwws
 
 :showDownloadingBanner
   cls
@@ -161,6 +169,8 @@ EXIT /B
   %cd%\php\php composer-setup.php
   %cd%\php\php -r "unlink('composer-setup.php');"
   move composer.phar php
+  echo @echo off > composer.cmd
+  echo php\php php\composer.phar %%* >> composer.cmd
   goto :EOF
 
 :cleanup
@@ -197,7 +207,7 @@ exit /b
 
 :installed
   cls
-  set /p build=< .installed
+  set /p build=< .puwws
   call :printbanner
   echo.
   call :printline
@@ -207,26 +217,33 @@ exit /b
 
   EXIT /B
 
-  :CASE2_1
+  :CASE2_php
     echo PHP server started. Close the window to stop
     call :printline
     start "php" /B %cd%\php\php.exe -S localhost:8000 -t www\
     start "browser" http://localhost:8000
-    goto END_CASE
-  :CASE2_2
+    goto END_CASE2
+  :CASE2_mariadb
     echo PHP, MariaDB server started. Close the window to stop
     call :printline
     start "php" /B %cd%\php\php.exe -S localhost:8000 -t www\
     start "mariadb" /B %cd%\mariadb\bin\mysqld.exe --console
     start "browser" http://localhost:8000
-    goto END_CASE
-  :CASE2_3
+    goto END_CASE2
+  :CASE2_wordpress
     echo Wordpress server started. Close the window to stop
     call :printline
     start "php" /B %cd%\php\php.exe -S localhost:8000 -t www\
     start "mariadb" /B %cd%\mariadb\bin\mysqld.exe --console
     start "browser" http://localhost:8000
-    goto END_CASE
+    goto END_CASE2
+  :CASE2_laravel
+    echo Laravel server started. Close the window to stop
+    call :printline
+    start "laravel" /B %cd%\php\php.exe www\artisan serve
+    start "mariadb" /B %cd%\mariadb\bin\mysqld.exe --console
+    start "browser" http://localhost:8000
+    goto END_CASE2
 
   :DEFAULT_CASE2
     goto END_CASE2

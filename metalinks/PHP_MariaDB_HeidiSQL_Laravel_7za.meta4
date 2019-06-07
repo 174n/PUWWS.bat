@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metalink xmlns="urn:ietf:params:xml:ns:metalink">
+ <file name="php.7z">
+   <size>8744964</size>
+   <version>7.3.6</version>
+   <url>https://github.com/SlimOpenSourceApps/Slim-version-of-php-Win32-VC15-x64/releases/download/7.3.6/php-7.3.6-Win32-VC15-x64-slim.7z</url>
+   <hash type="sha-256">b0482d5787d01d2cd3c40c9c9dbed0e51321545abcdd728f01750ddf66b99652</hash>
+ </file>
+ <file name="mariadb.7z">
+   <size>2996979</size>
+   <version>5.5.29</version>
+   <url>https://github.com/SlimOpenSourceApps/Slim-version-for-mariadb-winx64/releases/download/5.5.29/mariadb-5.5.29-winx64.7z</url>
+   <hash type="sha-256">e423a39347c341e69db12b8a53d6fd4c61ae90d9f4f21be668fce48a30e0a86a</hash>
+ </file>
+ <file name="HeidiSQL.zip">
+   <size>11788236</size>
+   <version>10.1</version>
+   <url>https://www.heidisql.com/downloads/releases/HeidiSQL_10.1_64_Portable.zip</url>
+   <hash type="sha-256">dc627bb94ff832ac42a9b7588af47edc6f31e20e1c98ce7df353b6cc6fb921a7</hash>
+ </file>
+ <file name="postinstall.zip">
+   <size>1504</size>
+   <version>latest</version>
+   <url>https://github.com/Rundik/PUWWS.bat/raw/master/postinstalls/laravel.7z</url>
+   <hash type="sha-256">49ee674073702439438c1701933a0b79042cf3cf79e8031d92c6de569e24f42a</hash>
+ </file>
+ <file name="7za.exe">
+   <size>587776</size>
+   <version>9.20</version>
+   <url>https://raw.githubusercontent.com/chocolatey-archive/chocolatey/master/src/tools/7za.exe</url>
+   <hash type="sha-256">c136b1467d669a725478a6110ebaaab3cb88a3d389dfa688e06173c066b76fcf</hash>
+ </file>
+</metalink>
