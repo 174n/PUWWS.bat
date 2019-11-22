@@ -11,7 +11,7 @@ if not exist "%cd%\aria2c.exe" (
   call :printline
   powershell -Command "(New-Object Net.WebClient).DownloadFile('https://uupdump.ml/autodl_files/aria2c.exe', '%cd%\aria2c.exe')"
 )
-call :checkhash "SHA256" "3eb8712b0db6ba466f8afe1bf606983fe8341c941bdfcadc07068288c7ca5a9c" "aria2c.exe"
+call :checkhash "SHA256" "b99bddb5501b8d15f4c35d4f8d0e6f23098f5875cec8c742911a298e78163093" "aria2c.exe"
 goto start
 
 :printbanner
